@@ -1,19 +1,12 @@
 import sys
 from random import randint
 
-from PyQt5.QtWidgets import (
-    QApplication,
-    QLabel,
-    QMainWindow,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt5.QtWidgets import QApplication, QLabel, QMainWindow, QPushButton, QVBoxLayout, QWidget
 
 
 class AnotherWindow(QWidget):
     """
-    This "window" is a QWidget. If it has no parent, it 
+    This "window" is a QWidget. If it has no parent, it
     will appear as a free-floating window.
     """
 
