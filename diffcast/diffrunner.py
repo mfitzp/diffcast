@@ -48,7 +48,20 @@ class DiffRunner(QRunnable):
 
     def insert_line(self, line, diffline):
         self.current.insert(line, '\n')
-        for n in range(len(diffline)):
+
+        # Handle whitespace, using 4char tabs.
+        ws = len(diffline) - len(diffline.lstrip())
+        tabs = ws // 4
+        for n in range(tabs):
+            self.current[line] = diffline[: n * 4] + '\n'
+            time.sleep(TYPING_SPEED)
+
+            self.signals.updated.emit(line, n, self.current)
+
+        start = tabs * 4
+
+        # Handle the remainder of the line.
+        for n in range(start, len(diffline)):
             self.current[line] = diffline[:n] + '\n'
             time.sleep(TYPING_SPEED)
 
@@ -115,8 +128,6 @@ class DiffRunner(QRunnable):
 
     @pyqtSlot()
     def run(self):
-        print(self.files)
-
         initial_file, files = self.files[0], self.files[1:]
 
         with open(initial_file, 'r') as f1:

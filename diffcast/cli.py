@@ -13,6 +13,9 @@ DIFF_INSERTION = '+'
 DIFF_DELETION = '-'
 DIFF_COMMENT = '?'
 
+# FIXME: Not currently up to date with diffrunner, should be using shared library.
+# requires reworking of the diffrunner code.
+
 
 def rewrite_output_file(output_file, lines):
     with open(output_file, 'w') as fo:
