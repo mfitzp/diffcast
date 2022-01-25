@@ -150,8 +150,7 @@ class CodeViewer(QWidget):
 
         self.setLayout(hl)
 
-        self.active_file = None
-
+        self.set_active_file('~')
         self.set_display_mode('custom')
 
     def resizeEvent(self, e):

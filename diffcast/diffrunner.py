@@ -46,6 +46,8 @@ class DiffRunner(QRunnable):
         self._quit_requested = False
         self._step_over_files = False
 
+        print(files)
+
     def insert_line(self, line, diffline):
         self.current.insert(line, '\n')
 
@@ -156,11 +158,13 @@ class DiffRunner(QRunnable):
             diff = difflib.Differ()
             delta = list(diff.compare(self.current, target))
 
+            print(delta)
+
             # Strip comments.
             delta = [d for d in delta if d[0] != DIFF_COMMENT]
 
             cl, dl = 0, 0  # current line, diff line
-            while cl < len(self.current) - 1:
+            while cl < len(self.current):
 
                 if self._quit_requested:
                     break
@@ -177,22 +181,22 @@ class DiffRunner(QRunnable):
 
                 # Temporary look-ahead for whitespace after series of inserts.
                 # add the edit early, then convert that edit in the delta list to a comment.
-                if first_char == DIFF_INSERTION and diffline.strip():
-                    tdl = dl
-                    while True:
-                        tdl += 1
-                        tdc = delta[tdl]
-                        tfc, tdiffline = tdc[0], tdc[2:]
-                        if tfc != DIFF_INSERTION:
-                            break
-                        if not tdiffline.strip():  # Empty line.
-                            self.insert_line(cl, tdiffline)
-                            delta[tdl] = (DIFF_NO_CHANGE, None, '')
-                            break
+                # if first_char == DIFF_INSERTION and diffline.strip():
+                #    tdl = dl
+                #    while True:
+                #        tdl += 1
+                #        tdc = delta[tdl]
+                #        tfc, tdiffline = tdc[0], tdc[2:]
+                #        if tfc != DIFF_INSERTION:
+                #            break
+                #        if not tdiffline.strip():  # Empty line.
+                #            self.insert_line(cl, tdiffline)
+                #            delta[tdl] = (DIFF_NO_CHANGE, None, '')
+                #            break
 
                 # End temporary lookahead.
 
-                if dl < len(delta) - 1:
+                if dl < len(delta):
                     # Handle subsequent edit lines, delete>insert = modify
                     dn = delta[dl + 1]
                     next_char, nextdiffline = dn[0], dn[2:]
