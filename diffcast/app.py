@@ -230,6 +230,10 @@ class MainWindow(QMainWindow):
         if not paths:
             return
 
+        # Sort alphanumerically before adding.
+        # FIXME: Split numeric suffix, something smarter?
+        paths.sort()
+
         for path in paths:
             filename = os.path.basename(path)
             lwi = QListWidgetItem(filename)

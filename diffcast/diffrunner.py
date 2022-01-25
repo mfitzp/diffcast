@@ -24,6 +24,8 @@ def chunkify(lst, n):
     lst = list(lst)
     return [lst[i : i + n] for i in range(0, len(lst), n)]
 
+def parse_delta(dc):
+    return dc[0], dc[2:]
 
 class Signals(QObject):
     # emit the row, col and entire text
@@ -46,8 +48,6 @@ class DiffRunner(QRunnable):
         self._quit_requested = False
         self._step_over_files = False
 
-        print(files)
-
     def insert_line(self, line, diffline):
         self.current.insert(line, '\n')
 
@@ -69,20 +69,22 @@ class DiffRunner(QRunnable):
 
             self.signals.updated.emit(line, n, self.current)
 
-    def _indent_line(self, line, nindents):
+    def _indent_line(self, line, nlines, nindents):
         chunks = chunkify(range(0, nindents), 4)
         for chunk in chunks:
             n = len(chunk)
-            self.current[line] = (' ' * n) + self.current[line]
+            for ln in range(nlines):
+                self.current[line + ln] = (' ' * n) + self.current[line + ln]
             time.sleep(TYPING_SPEED)
 
             self.signals.updated.emit(line, n, self.current)
 
-    def _dedent_line(self, line, ndedents):
+    def _dedent_line(self, line, nlines, ndedents):
         chunks = chunkify(range(0, ndedents), 4)
         for chunk in chunks:
             n = len(chunk)
-            self.current[line] = self.current[line][n:]
+            for ln in range(nlines):
+                self.current[line + ln] = self.current[line + ln][n:]
             time.sleep(TYPING_SPEED)
 
             self.signals.updated.emit(line, 0, self.current)
@@ -96,9 +98,15 @@ class DiffRunner(QRunnable):
         dstart = first_whitespace(diffline)
 
         # Fix indent differences if there are any.
-        # FIXME: Should do in x4 if possible.
-        self._indent_line(line, dstart - cstart)
-        self._dedent_line(line, cstart - dstart)
+        self._indent_line(line, 1, dstart - cstart)
+        self._dedent_line(line, 1, cstart - dstart)
+
+    def block_indent(self, line, n_lines, dent):
+        if dent < 0:
+            self._dedent_line(line, n_lines, abs(dent))   
+        else:
+            self._indent_line(line, n_lines, dent)
+
 
     def edit_line(self, line, diffline):
 
@@ -158,20 +166,19 @@ class DiffRunner(QRunnable):
             diff = difflib.Differ()
             delta = list(diff.compare(self.current, target))
 
-            print(delta)
-
             # Strip comments.
             delta = [d for d in delta if d[0] != DIFF_COMMENT]
 
             cl, dl = 0, 0  # current line, diff line
-            while cl < len(self.current):
+            block_indented = 0 # track indents, so not reapplied
+            while dl < len(delta):
 
                 if self._quit_requested:
                     break
 
                 dc = delta[dl]
 
-                first_char, diffline = dc[0], dc[2:]
+                first_char, diffline = parse_delta(dc)
 
                 if first_char == DIFF_NO_CHANGE:
                     # continue
@@ -179,31 +186,68 @@ class DiffRunner(QRunnable):
                     dl += 1
                     continue
 
-                # Temporary look-ahead for whitespace after series of inserts.
-                # add the edit early, then convert that edit in the delta list to a comment.
-                # if first_char == DIFF_INSERTION and diffline.strip():
-                #    tdl = dl
-                #    while True:
-                #        tdl += 1
-                #        tdc = delta[tdl]
-                #        tfc, tdiffline = tdc[0], tdc[2:]
-                #        if tfc != DIFF_INSERTION:
-                #            break
-                #        if not tdiffline.strip():  # Empty line.
-                #            self.insert_line(cl, tdiffline)
-                #            delta[tdl] = (DIFF_NO_CHANGE, None, '')
-                #            break
+                # Temporary look-ahead for trailing whitespace lines after series of inserts.
+                # add the trailing space early, then convert that edit in the delta list to a comment.
+                if first_char == DIFF_INSERTION and diffline.strip():
 
+                    tdl = dl
+                    while tdl < len(delta) -1:
+                        tdl += 1
+                        tdc = delta[tdl]
+                        tfc, tdiffline = tdc[0], tdc[2:]
+                        if tfc != DIFF_INSERTION:
+                            break
+                        if not tdiffline.strip():  # Empty line.
+                            self.insert_line(cl, tdiffline)
+                            delta[tdl] = (DIFF_NO_CHANGE, None, '')
+                            break
+                
                 # End temporary lookahead.
 
-                if dl < len(delta):
+                if dl < len(delta) - 1:
                     # Handle subsequent edit lines, delete>insert = modify
                     dn = delta[dl + 1]
-                    next_char, nextdiffline = dn[0], dn[2:]
+                    next_char, nextdiffline = parse_delta(dn)
                 else:
                     next_char = None
 
+                # Temporary look-ahead to correctly indent/dedent a block of lines. Does not
+                # modify the diffs, just the current state. Lines are then re-applied as normal.
+                if tdl > block_indented and (first_char, next_char) == (DIFF_DELETION, DIFF_INSERTION):
+                    # Calculate the in/dedent.
+                    dent = first_whitespace(nextdiffline) - first_whitespace(diffline)
+                    n_dents = 1
+                    tcl = cl
+                    tdl = dl
+                    while tdl < len(delta) -3:
+                        tdl += 2
+                        tcl += 1
+
+                        # Get the chars to check.
+                        tchar1, tdiffline1 = parse_delta(delta[tdl])
+                        tchar2, tdiffline2 = parse_delta(delta[tdl + 1])
+
+                        if (tchar1, tchar2) != (DIFF_DELETION, DIFF_INSERTION):
+                            break
+
+                        tdent = first_whitespace(tdiffline2) - first_whitespace(tdiffline1)
+                        if tdent != dent:
+                            break
+
+                        n_dents += 1
+
+                    block_indented = tdl # don't apply block indents here again
+                    if n_dents > 1:
+                        self.block_indent(cl, n_dents, dent)
+                # End temporary lookahead.
+
                 if (first_char, next_char) == (DIFF_DELETION, DIFF_INSERTION):
+                    if nextdiffline == self.current[cl]:
+                        # Skip if no change (can happen with the block indents).
+                        dl += 2
+                        cl += 1
+                        continue
+
                     # Correct the indentation of the line.
                     self.indent_line(cl, nextdiffline)
                     # Modify diffline to nextdiffline.
