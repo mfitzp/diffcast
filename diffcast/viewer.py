@@ -104,6 +104,9 @@ class Editor(QsciScintilla):
         lexer.setColor(QColor('#ce9178'), 18)  # 18 Triple single-quoted f-string
         lexer.setColor(QColor('#ce9178'), 19)  # 19 Triple double-quoted f-string
 
+        # Background colors.
+        lexer.setPaper(QColor('#1e1e1e'), 13)  # 13 Unclosed string
+
         lexer.setFont(font)
 
         self.setLexer(lexer)
