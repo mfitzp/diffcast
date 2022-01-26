@@ -49,13 +49,6 @@ class Editor(QsciScintilla):
         lexer.setDefaultColor(QColor('#d4d4d4'))
         lexer.setHighlightSubidentifiers(False)
 
-        self.SendScintilla(
-            QsciScintilla.SCI_SETKEYWORDS,
-            0,
-            b"False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield",
-        )
-        self.SendScintilla(QsciScintilla.SCI_SETKEYWORDS, 1, b"self")
-
         """
         0 Default
         1 Comment
@@ -114,6 +107,14 @@ class Editor(QsciScintilla):
 
         # Hide horizontal scrollbar.
         self.SendScintilla(QsciScintilla.SCI_SETHSCROLLBAR, 0)
+
+        # Tweak lexer.
+        self.SendScintilla(
+            QsciScintilla.SCI_SETKEYWORDS,
+            0,
+            b"False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield",
+        )
+        self.SendScintilla(QsciScintilla.SCI_SETKEYWORDS, 1, b"self")
 
 
 class NoMouseListView(QListView):

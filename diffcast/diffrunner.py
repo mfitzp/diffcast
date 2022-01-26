@@ -36,6 +36,7 @@ class Signals(QObject):
     file_changed = pyqtSignal(str)
     file_complete = pyqtSignal(str, list)
     completed = pyqtSignal()
+    progress = pyqtSignal(int)
 
 
 class DiffRunner(QRunnable):
@@ -169,6 +170,7 @@ class DiffRunner(QRunnable):
         with open(initial_file, 'r') as f1:
             self.current = f1.readlines()
 
+        self.signals.progress.emit(0)
         self.signals.file_changed.emit(initial_file)
         self.signals.file_complete.emit(initial_file, self.current)
 
@@ -179,12 +181,14 @@ class DiffRunner(QRunnable):
         self.signals.updated.emit(last_line, last_char, self.current)
         time.sleep(INITIAL_SPEED)
 
-        for file in files:
+        n_files = len(self.files)  # So we don't hit 100% until last file is complete.
+        for file_n, file in enumerate(files, 1):
 
             if self._quit_requested:
                 break
 
             self.signals.file_changed.emit(file)
+            self.signals.progress.emit(int(file_n / n_files * 100))
 
             with open(file, 'r') as f2:
                 target = f2.readlines()
@@ -293,4 +297,5 @@ class DiffRunner(QRunnable):
             self.signals.file_complete.emit(file, self.current)
 
         # We're finished.
+        self.signals.progress.emit(100)
         self.signals.completed.emit()

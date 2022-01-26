@@ -1,6 +1,9 @@
-# DiffCast
+<p style="text-align:center">
+  <img src="diffcast/images/icon.png" />
+</p>
 
-Auto-generate coding demos & screencasts from Python files.
+
+**Auto-generate coding demos & screencasts from Python files.**
 
 Provided with a series of Python files, DiffCast automatically generates coding
 demos/screencasts using human-like edits. Designed for creating reproducible
@@ -10,6 +13,7 @@ tutoring examples, library demos or demonstrating code to a class.
 
 ## What?
 
+If you make programming screencasts
 
 
 
@@ -29,10 +33,10 @@ tutoring examples, library demos or demonstrating code to a class.
 
 Below are some examples of screencasts created using DiffCast. These are short examples, to keep things readable but there is no limit to the number of transition files you can use, or how long the resulting DiffCast can be.
 
-_Short demo, using the 4 demoN.py files in /demos. Demonstrates the block indenting behavior_  
+_Short demo, using the 4 demoN.py files in /demos. Demonstrates the block indenting behavior_
 <video src="https://user-images.githubusercontent.com/126239/151127893-5c98ba8d-c431-4a25-bb1f-e0b33645a2b6.mp4"></video>
 
-_Longer demo, using the 6 windows_N.py files in /demos. Demonstrates more complex edits, whitespace padding._  
+_Longer demo, using the 6 windows_N.py files in /demos. Demonstrates more complex edits, whitespace padding._
 <video src="https://user-images.githubusercontent.com/126239/151128026-531c46db-30cb-466a-a836-8818718a2b13.mp4"></video>
 
 
@@ -75,7 +79,7 @@ When you edit a file you *generally* go from top to bottom, but you don't enter 
 
 * If you're adding a block of code which is followed by a blank line, a trailing blank line will be added first (adding space around the new code).
 * Changes to the middle of lines will be edited in the middle of the line, leaving leading and trailing parts intact during editing.
-* Whitespace is added using in blocks of 4 (emulating tab indent) where possible.
+* Whitespace is added in blocks of 4 (emulating tab indent) where possible.
 * Blocks are indented as a whole, where possible.
 
 This is a work in progress and new edits may be added.

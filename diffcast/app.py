@@ -4,22 +4,11 @@ import sys
 
 from PyQt6.QtCore import QSettings, QSize, Qt, QThreadPool
 from PyQt6.QtGui import QColor, QIcon, QPalette
-from PyQt6.QtWidgets import (
-    QAbstractItemView,
-    QApplication,
-    QCheckBox,
-    QComboBox,
-    QFileDialog,
-    QHBoxLayout,
-    QLineEdit,
-    QListWidget,
-    QListWidgetItem,
-    QMainWindow,
-    QMessageBox,
-    QPushButton,
-    QVBoxLayout,
-    QWidget,
-)
+from PyQt6.QtWidgets import (QAbstractItemView, QApplication, QCheckBox,
+                             QComboBox, QFileDialog, QHBoxLayout, QLineEdit,
+                             QListWidget, QListWidgetItem, QMainWindow,
+                             QMessageBox, QProgressBar, QPushButton,
+                             QVBoxLayout, QWidget)
 
 from diffrunner import DiffRunner
 from viewer import DISPLAY_MODES, CodeViewer
@@ -74,6 +63,12 @@ class MainWindow(QMainWindow):
         self.difflist.currentRowChanged.connect(self.update_button_state)
 
         vl.addWidget(self.difflist)
+
+        self.progress = QProgressBar()
+        self.progress.setMaximumHeight(5)
+        self.progress.setRange(0, 100)
+        self.progress.setTextVisible(False)
+        vl.addWidget(self.progress)
 
         controls = QHBoxLayout()
         self.start_btn = QPushButton("Start")
@@ -217,6 +212,7 @@ class MainWindow(QMainWindow):
             self.runner.signals.file_changed.connect(self.diff_file_changed)
             self.runner.signals.file_complete.connect(self.differ_file_complete)
             self.runner.signals.completed.connect(self.differ_complete)
+            self.runner.signals.progress.connect(self.progress.setValue)
 
             self.stop_btn.pressed.connect(self.runner.quit)
 
@@ -230,7 +226,7 @@ class MainWindow(QMainWindow):
         if not paths:
             return
 
-        # Sort alphanumerically before adding.
+        #  Sort alphanumerically before adding.
         # FIXME: Split numeric suffix, something smarter?
         paths.sort()
 
