@@ -1,29 +1,29 @@
+<p align="center">
+  <img src="diffcast/images/icon.png" />
+</p>
+
+
 # DiffCast
 
-Auto-generate coding demos & screencasts from Python files.
+**Auto-generate coding demos & screencasts from Python files.**
 
 Provided with a series of Python files, DiffCast automatically generates coding
 demos/screencasts using human-like edits. Designed for creating reproducible
 tutoring examples, library demos or demonstrating code to a class.
 
-**Avoid typos, reduce video editing time & narrate code changes without distraction.**
+Avoid distracting typos, reduce video editing time, narrate code changes without "umms and aaahss",
+make screencast creation more accessible for people with disabilities. Regular editing speed makes demos easier to follow.
 
 ## What?
 
+Programmings screencasts are a popular way to teach programming and demo tools. Typically people will open up their favorite editor and record themselves tapping away. But this has a few problems. A good setup for coding isn't neccessarily a good setup for video -- with text too small, a window too big, or too many distractions. Typing code in live means inevitable mistakes, even more so if you're narrating what you're doing at the same time. Mistakes means more time editing or confusion for the people watching.
 
-
-
-
-
-
+**DiffCast** is an attempt to eliminate that, by generating screencasts from *testable* fully-working examples you prepare ahead of time. The editor view is configured to be large & easily readable in video, without messing with your IDE settings. Edits happen at a regular speed, without mistakes, making them easy to follow. Each _diffcast_ is completely reproducible, with the same files producing the same output every time.
 
 ## Install
 
 * [Windows Installer](https://download.mfitzp.com/DiffCast.exe)
 * macOS Installer (coming soon...)
-
-
-
 
 ## Demos
 
