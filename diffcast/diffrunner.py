@@ -7,7 +7,7 @@ from PyQt6.QtCore import QObject, QRunnable, pyqtSignal, pyqtSlot
 
 INITIAL_SPEED = 3
 TYPING_SPEED = 0.05
-INSERT_SPEED = 1.0
+INSERT_SPEED = 1.5
 DELETE_SPEED = 0.5
 
 DIFF_NO_CHANGE = ' '
@@ -25,8 +25,10 @@ def chunkify(lst, n):
     lst = list(lst)
     return [lst[i : i + n] for i in range(0, len(lst), n)]
 
+
 def parse_delta(dc):
     return dc[0], dc[2:]
+
 
 class Signals(QObject):
     # emit the row, col and entire text
@@ -104,10 +106,9 @@ class DiffRunner(QRunnable):
 
     def block_indent(self, line, n_lines, dent):
         if dent < 0:
-            self._dedent_line(line, n_lines, abs(dent))   
+            self._dedent_line(line, n_lines, abs(dent))
         else:
             self._indent_line(line, n_lines, dent)
-
 
     def edit_line(self, line, diffline):
 
@@ -193,7 +194,7 @@ class DiffRunner(QRunnable):
             delta = self.process_deltas(delta)
 
             cl, dl = 0, 0  # current line, diff line
-            block_indented = 0 # track indents, so not reapplied
+            block_indented = 0  # track indents, so not reapplied
             while dl < len(delta):
 
                 if self._quit_requested:
@@ -214,7 +215,7 @@ class DiffRunner(QRunnable):
                 if first_char == DIFF_INSERTION and diffline.strip():
 
                     tdl = dl
-                    while tdl < len(delta) -1:
+                    while tdl < len(delta) - 1:
                         tdl += 1
                         tdc = delta[tdl]
                         tfc, tdiffline = tdc[0], tdc[2:]
@@ -224,18 +225,18 @@ class DiffRunner(QRunnable):
                             self.insert_line(cl, tdiffline)
                             delta[tdl] = (DIFF_NO_CHANGE, None, '')
                             break
-                
+
                 # End temporary lookahead.
 
                 # Temporary look-ahead to correctly indent/dedent a block of lines. Does not
                 # modify the diffs, just the current state. Lines are then re-applied as normal.
-                if tdl > block_indented and first_char == DIFF_EDIT:
+                if dl > block_indented and first_char == DIFF_EDIT:
                     # Calculate the in/dedent.
                     dent = first_whitespace(diffline) - first_whitespace(self.current[cl])
                     n_dents = 1
                     tcl = cl
                     tdl = dl
-                    while tdl < len(delta) -3:
+                    while tdl < len(delta) - 3:
                         tdl += 1
                         tcl += 1
 
@@ -252,7 +253,7 @@ class DiffRunner(QRunnable):
 
                         n_dents += 1
 
-                    block_indented = tdl # don't apply block indents here again
+                    block_indented = tdl  # don't apply block indents here again
                     if n_dents > 1:
                         self.block_indent(cl, n_dents, dent)
                 # End temporary lookahead.
