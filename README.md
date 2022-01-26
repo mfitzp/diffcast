@@ -22,8 +22,8 @@ Programming screencasts are a popular way to teach programming and demo tools. T
 
 ## Install
 
-* [Windows Installer](https://download.mfitzp.com/DiffCast.exe)
-* macOS Installer (coming soon...)
+* [Windows Installer](https://github.com/mfitzp/diffcast/releases/download/v0.0.1/DiffCast.exe)
+* [macOS Installer](https://github.com/mfitzp/diffcast/releases/download/v0.0.1/DiffCast.dmg)
 
 ## Demos
 
