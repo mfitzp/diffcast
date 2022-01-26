@@ -3,10 +3,10 @@ import sys
 
 block_cipher = None
 
-a = Analysis(['diffcast\\app.py'],
+a = Analysis(['diffcast/app.py'],
              pathex=[],
              binaries=[],
-             datas=[('diffcast\\images\\icon.ico', 'images')],
+             datas=[('diffcast/images/icon.ico', 'images')],
              hiddenimports=['PyQt6.QtPrintSupport'],
              hookspath=[],
              hooksconfig={},
@@ -33,7 +33,7 @@ exe = EXE(pyz,
           target_arch=None,
           codesign_identity=None,
           entitlements_file=None,
-          icon='diffcast\\images\\icon.ico')
+          icon='diffcast/images/icon.ico')
 coll = COLLECT(exe,
                a.binaries,
                a.zipfiles,
