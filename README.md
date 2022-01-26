@@ -14,6 +14,8 @@ tutoring examples, library demos or demonstrating code to a class.
 Avoid distracting typos, reduce video editing time, narrate code changes without "umms and aaahss",
 make screencast creation more accessible for people with disabilities. Regular editing speed makes demos easier to follow.
 
+<video src="https://user-images.githubusercontent.com/126239/151175395-b2afac8a-eeec-4667-87e8-9d7f911624e1.mp4"></video>
+
 ## What?
 
 Programming screencasts are a popular way to teach programming and demo tools. Typically people will open up their favorite editor and record themselves tapping away. But this has a few problems. A good setup for coding isn't necessarily a good setup for video -- with text too small, a window too big, or too many distractions. Typing code in live means inevitable mistakes, even more so if you're narrating what you're doing at the same time. Mistakes means more time editing or confusion for the people watching.
@@ -28,9 +30,6 @@ Programming screencasts are a popular way to teach programming and demo tools. T
 ## Demos
 
 Below are some examples of screencasts created using DiffCast. These are short examples, to keep things readable but there is no limit to the number of transition files you can use, or how long the resulting DiffCast can be.
-
-_Short demo, using the 4 demoN.py files in /demos. Demonstrates the block indenting behavior_
-<video src="https://user-images.githubusercontent.com/126239/151127893-5c98ba8d-c431-4a25-bb1f-e0b33645a2b6.mp4"></video>
 
 _Longer demo, using the 6 windows_N.py files in /demos. Demonstrates more complex edits, whitespace padding._
 <video src="https://user-images.githubusercontent.com/126239/151128026-531c46db-30cb-466a-a836-8818718a2b13.mp4"></video>
