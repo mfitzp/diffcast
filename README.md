@@ -131,7 +131,7 @@ Sure. Just add more intermediate files. For example, if you want to make edits t
 
 ### Is this Python only?
 
-Yes, right now. But the viewer component uses QScintilla as the editing component which includes lexers for many other languages AVS, Bash, Batch, CMake, CoffeeScript, CPP, D, Diff, Fortran77, HTML, JSON, Lua, Makefile, Markdown, Matlab, Pascal, Perl, PostScript, Python, Ruby, Spice, SQL, TCL, TeX, Verilog, VHDL and YAML). Other language support and syntax highlighting configuration will be added in a later version, if there is interest.
+Yes, right now. But the viewer component uses QScintilla as the editing component which includes lexers for many other languages (including AVS, Bash, Batch, CMake, CoffeeScript, CPP, D, Diff, Fortran77, HTML, JSON, Lua, Makefile, Markdown, Matlab, Pascal, Perl, PostScript, Python, Ruby, Spice, SQL, TCL, TeX, Verilog, VHDL and YAML). Other language support and syntax highlighting configuration will be added in a later version, if there is interest.
 
 
 ### Can you DiffCast through git commits?
