@@ -40,30 +40,27 @@ _Longer demo, using the 6 windows_N.py files in /demos. Demonstrates more comple
 
 DiffCast costs of two windows -- (1) the code viewer and (2) the controller.
 
+![diffcast-demo-windows](https://user-images.githubusercontent.com/126239/151141472-ee71096a-d9d1-4843-9614-aef323e398ec.png)
+
 Configure the size of the code viewer component.
 
+![diffcast-demo-size](https://user-images.githubusercontent.com/126239/151141490-ddc18d73-1116-478d-a848-a1dccecd2cbe.png)
 
 Add your intermediate files for generating the DiffCast from & then select the file in the list to start from.
 
+![diffcast-demo-files](https://user-images.githubusercontent.com/126239/151141504-084c6789-6be7-4151-977f-a32b44cbf62c.png)
 
+Clicking *Start* will start playing a DiffCast from the currently selected file. The first file will be loaded *as-is* and then edited until it matches the 2nd file, and then 3rd file and so on. You can *Stop* the DiffCast at any time. The *Prev* and *Next* buttons can be used to create DiffCasts stepping manually forwards (or backwards) through the changes, for example if you are demonstrating to a class.
 
-Clicking *Start* will start playing a DiffCast from the currently selected file.
-The first file will be loaded *as-is* and then edited until it matches the 2nd file, and then 3rd file and so on.
-
-You can *Stop* the DiffCast at any time.
-
-
-The *Prev* and *Next* buttons can be used to create DiffCasts stepping manually forwards (or backwards) through the changes, for example if you are demonstrating to a class.
-
-
+![diffcast-demo-controls](https://user-images.githubusercontent.com/126239/151141563-b2a0d9f9-8773-4eb8-9409-79c943b9248f.png)
 
 Sometimes you want your current code to be *runnable* in a particular location -- for example, if you want to bring up a shell and run the same file as the changes are demonstrated. In this case you can use *Select output file...* to select the file to write the latest version to. Only the final working files are written (the state *after* the diff) so it will always work.
 
-
-
+![diffcast-demo-output](https://user-images.githubusercontent.com/126239/151141588-b2f84633-6239-4c50-a929-afde83b55ca6.png)
 
 You can optionally show a file listing next to the code viewer, which will default to showing the selected output file in it's folder.
 
+![diffcast-demo-editor-filelist](https://user-images.githubusercontent.com/126239/151141686-41bab266-7c15-464c-b73e-2bfce1a48e61.png)
 
 ## FAQ
 
