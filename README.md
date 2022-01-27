@@ -5,7 +5,7 @@
 
 # DiffCast
 
-**Hands-free Programming Screencasts from Python source files.**
+***Hands-free Programming Screencasts from Python source files.***
 
 Provided with a series of Python files, DiffCast automatically generates coding
 demos/screencasts using human-like edits. Designed for creating reproducible
