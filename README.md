@@ -14,7 +14,7 @@ tutoring examples, library demos or demonstrating code to a class.
 Avoid distracting typos, reduce video editing time, narrate code changes without "umms and aaahss",
 make screencast creation more accessible for people with disabilities. Regular editing speed makes demos easier to follow.
 
-<video src="https://user-images.githubusercontent.com/126239/151175395-b2afac8a-eeec-4667-87e8-9d7f911624e1.mp4"></video>
+<video src="https://user-images.githubusercontent.com/126239/151336478-82f31091-5138-42b2-8fe5-6e3fd5cdfc72.mp4"></video>
 
 ## What?
 
