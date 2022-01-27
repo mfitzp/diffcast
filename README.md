@@ -14,6 +14,8 @@ tutoring examples, library demos or demonstrating code to a class.
 Avoid distracting typos, reduce video editing time, narrate code changes without "umms and aaahss",
 make screencast creation more accessible for people with disabilities. Regular editing speed makes demos easier to follow.
 
+<video src="https://user-images.githubusercontent.com/126239/151175395-b2afac8a-eeec-4667-87e8-9d7f911624e1.mp4"></video>
+
 ## What?
 
 Programming screencasts are a popular way to teach programming and demo tools. Typically people will open up their favorite editor and record themselves tapping away. But this has a few problems. A good setup for coding isn't necessarily a good setup for video -- with text too small, a window too big, or too many distractions. Typing code in live means inevitable mistakes, even more so if you're narrating what you're doing at the same time. Mistakes means more time editing or confusion for the people watching.
@@ -22,15 +24,57 @@ Programming screencasts are a popular way to teach programming and demo tools. T
 
 ## Install
 
-* [Windows Installer](https://download.mfitzp.com/DiffCast.exe)
-* macOS Installer (coming soon...)
+* [Windows Installer](https://github.com/mfitzp/diffcast/releases/download/v0.0.1/DiffCast.exe)
+* [macOS Installer](https://github.com/mfitzp/diffcast/releases/download/v0.0.1/DiffCast.dmg)
 
 ## Demos
 
 Below are some examples of screencasts created using DiffCast. These are short examples, to keep things readable but there is no limit to the number of transition files you can use, or how long the resulting DiffCast can be.
 
-_Short demo, using the 4 demoN.py files in /demos. Demonstrates the block indenting behavior_
-<video src="https://user-images.githubusercontent.com/126239/151127893-5c98ba8d-c431-4a25-bb1f-e0b33645a2b6.mp4"></video>
+### Simple demo
+
+_Shorter demo, using the 4 demoN.py files in /demos._
+
+Give the following 4 files 
+
+```python
+print('Hello, world!')
+```
+
+```python
+name = input('What is your name?\n')
+print(f'Hello, {name}!')
+```
+
+```python
+friends = ['Emelia', 'Jack', 'Bernardina', 'Jaap']
+
+name = input('What is your name?\n')
+
+if name in friends:
+    print(f'Hello, {name}!')
+else:
+    print("I don't know you.")
+```
+
+```python
+friends = ['Emelia', 'Jack', 'Bernardina', 'Jaap']
+
+while True:
+    name = input('What is your name?\n')
+    
+    if name in friends:
+        print(f'Hello, {name}!')
+    else:
+        print("I don't know you.")
+        friends.append(name)
+```
+
+**DiffCast** will produce the following screencast.
+
+<video src="https://user-images.githubusercontent.com/126239/151181856-5484da69-12dd-4f20-b652-3c55aeb2da73.mp4"></video>
+
+### Longer demo
 
 _Longer demo, using the 6 windows_N.py files in /demos. Demonstrates more complex edits, whitespace padding._
 <video src="https://user-images.githubusercontent.com/126239/151128026-531c46db-30cb-466a-a836-8818718a2b13.mp4"></video>
@@ -87,7 +131,8 @@ Sure. Just add more intermediate files. For example, if you want to make edits t
 
 ### Is this Python only?
 
-Yes, right now. But the viewer component uses QScintilla as the editing component which includes lexers for many other languages. Other language support and syntax highlighting configuration will be added in a later version, if there is interest.
+Yes, right now. But the viewer component uses QScintilla as the editing component which includes lexers for many other languages (including AVS, Bash, Batch, CMake, CoffeeScript, CPP, D, Diff, Fortran77, HTML, JSON, Lua, Makefile, Markdown, Matlab, Pascal, Perl, PostScript, Python, Ruby, Spice, SQL, TCL, TeX, Verilog, VHDL and YAML). Other language support and syntax highlighting configuration will be added in a later version, if there is interest.
+
 
 ### Can you DiffCast through git commits?
 
