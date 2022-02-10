@@ -1,6 +1,7 @@
 import difflib
 import os
 import sys
+import uuid
 
 from PyQt6.QtCore import QSettings, QSize, Qt, QThreadPool
 from PyQt6.QtGui import QColor, QIcon, QPalette
@@ -52,6 +53,10 @@ class MainWindow(QMainWindow):
         add_btn.pressed.connect(self.open_file_dialog)
         controls.addWidget(add_btn)
 
+        add_empty_btn = QPushButton("Add Empty")
+        add_empty_btn.pressed.connect(self.add_empty_file)
+        controls.addWidget(add_empty_btn)
+
         del_btn = QPushButton("Remove")
         del_btn.pressed.connect(self.delete_selected_diffs)
         controls.addWidget(del_btn)
@@ -61,6 +66,7 @@ class MainWindow(QMainWindow):
         self.difflist = QListWidget()
         self.difflist.setDragDropMode(QAbstractItemView.DragDropMode.InternalMove)
         self.difflist.currentRowChanged.connect(self.update_button_state)
+        self.difflist.itemClicked.connect(self.select)
 
         vl.addWidget(self.difflist)
 
@@ -75,11 +81,11 @@ class MainWindow(QMainWindow):
         self.start_btn.pressed.connect(self.start)
         controls.addWidget(self.start_btn)
 
-        self.prev_btn = QPushButton("Prev")
+        self.prev_btn = QPushButton("&Prev")
         self.prev_btn.pressed.connect(self.prev)
         controls.addWidget(self.prev_btn)
 
-        self.next_btn = QPushButton("Next")
+        self.next_btn = QPushButton("&Next")
         self.next_btn.pressed.connect(self.next)
         controls.addWidget(self.next_btn)
 
@@ -124,7 +130,8 @@ class MainWindow(QMainWindow):
             row = self.difflist.currentRow()
 
         disable_prev = row == -1 or row == 0
-        disable_next = row == -1 or row == self.difflist.count()
+        disable_next = row == -1 or row == self.difflist.count() -1
+
         self.prev_btn.setDisabled(disable_prev)
         self.next_btn.setDisabled(disable_next)
 
@@ -147,13 +154,13 @@ class MainWindow(QMainWindow):
         self.target_file = None
         self.target_file_label.setText("")
 
-    def diff_file_changed(self, path):
+    def diff_file_changed(self, fid):
         for idx in range(self.difflist.count()):
             lwi = self.difflist.item(idx)
-            if lwi.data(Qt.ItemDataRole.UserRole) == path:
+            if lwi.data(Qt.ItemDataRole.UserRole + 1) == fid:
                 self.difflist.setCurrentItem(lwi)
 
-    def differ_file_complete(self, filename, source):
+    def differ_file_complete(self, fid, source):
         if self.target_file:
             # If file is unset, this will be skipped.
             with open(self.target_file, 'w') as f:
@@ -172,7 +179,8 @@ class MainWindow(QMainWindow):
         for n in range(row, self.difflist.count()):
             lwi = self.difflist.item(n)
             path = lwi.data(Qt.ItemDataRole.UserRole)
-            files.append(path)
+            fid = lwi.data(Qt.ItemDataRole.UserRole + 1)
+            files.append((fid, path))
 
         self.diff(files)
 
@@ -185,7 +193,8 @@ class MainWindow(QMainWindow):
         for n in range(row, row - 2, -1):
             lwi = self.difflist.item(n)
             path = lwi.data(Qt.ItemDataRole.UserRole)
-            files.append(path)
+            fid = lwi.data(Qt.ItemDataRole.UserRole + 1)
+            files.append((fid, path))
 
         self.diff(files)
 
@@ -198,12 +207,22 @@ class MainWindow(QMainWindow):
         for n in range(row, row + 2):
             lwi = self.difflist.item(n)
             path = lwi.data(Qt.ItemDataRole.UserRole)
-            files.append(path)
+            fid = lwi.data(Qt.ItemDataRole.UserRole + 1)
+            files.append((fid, path))
 
         self.diff(files)
 
+    def select(self, lwi):
+        """ Update view when item in view clicked. """
+        path = lwi.data(Qt.ItemDataRole.UserRole)
+        fid = lwi.data(Qt.ItemDataRole.UserRole + 1)
+        files = [(fid, path)]
+
+        # Diff a single, initial file. Resets view to current item.
+        self.diff(files)
+
     def diff(self, files):
-        if len(files) > 1:
+        if files:
             self.start_btn.setDisabled(True)
             self.prev_btn.setDisabled(True)
             self.next_btn.setDisabled(True)
@@ -220,6 +239,7 @@ class MainWindow(QMainWindow):
 
     def differ_complete(self):
         self.start_btn.setDisabled(False)
+        self.update_button_state()
 
     def open_file_dialog(self):
         paths, _ = QFileDialog.getOpenFileNames()
@@ -234,9 +254,18 @@ class MainWindow(QMainWindow):
             filename = os.path.basename(path)
             lwi = QListWidgetItem(filename)
             lwi.setData(Qt.ItemDataRole.UserRole, path)
+            fid = uuid.uuid4().hex
+            lwi.setData(Qt.ItemDataRole.UserRole +1, fid)
             self.difflist.addItem(lwi)
 
         self.update_button_state()
+
+    def add_empty_file(self):
+        lwi = QListWidgetItem('[Empty]')
+        lwi.setData(Qt.ItemDataRole.UserRole, None)
+        fid = uuid.uuid4().hex
+        lwi.setData(Qt.ItemDataRole.UserRole +1, fid)
+        self.difflist.addItem(lwi)
 
     def closeEvent(self, e):
         self.viewer.close()

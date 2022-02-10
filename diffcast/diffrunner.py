@@ -163,35 +163,44 @@ class DiffRunner(QRunnable):
 
         return tdelta
 
+    def load_file_or_empty(self, filename):
+        if filename is None:
+            return []
+
+        with open(filename, 'r') as f1:
+            return f1.readlines()
+
     @pyqtSlot()
     def run(self):
-        initial_file, files = self.files[0], self.files[1:]
+        (fid, initial_file), files = self.files[0], self.files[1:]
 
-        with open(initial_file, 'r') as f1:
-            self.current = f1.readlines()
+        self.current = self.load_file_or_empty(initial_file)
 
         self.signals.progress.emit(0)
-        self.signals.file_changed.emit(initial_file)
-        self.signals.file_complete.emit(initial_file, self.current)
+        self.signals.file_changed.emit(fid)
+        self.signals.file_complete.emit(fid, self.current)
 
         # Update initial state.
         last_line = len(self.current) - 1
-        last_char = len(self.current[last_line]) - 1
+        if last_line > 0:
+            last_char = len(self.current[last_line]) - 1
+        else:
+            last_char = 0
 
         self.signals.updated.emit(last_line, last_char, self.current)
-        time.sleep(INITIAL_SPEED)
 
         n_files = len(self.files)  # So we don't hit 100% until last file is complete.
-        for file_n, file in enumerate(files, 1):
+        for file_n, (fid, file) in enumerate(files, 1):
 
             if self._quit_requested:
                 break
 
-            self.signals.file_changed.emit(file)
+            time.sleep(INITIAL_SPEED)
+
+            self.signals.file_changed.emit(fid)
             self.signals.progress.emit(int(file_n / n_files * 100))
 
-            with open(file, 'r') as f2:
-                target = f2.readlines()
+            target = self.load_file_or_empty(file)
 
             diff = difflib.Differ()
             delta = list(diff.compare(self.current, target))
@@ -294,7 +303,7 @@ class DiffRunner(QRunnable):
                     continue
 
             # Emit the completed file edit.
-            self.signals.file_complete.emit(file, self.current)
+            self.signals.file_complete.emit(fid, self.current)
 
         # We're finished.
         self.signals.progress.emit(100)

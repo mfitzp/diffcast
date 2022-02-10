@@ -20,6 +20,9 @@ class Editor(QsciScintilla):
     def __init__(self, parent=None):
         super().__init__(parent)
 
+        # Don't take focus.
+        self.setFocusPolicy(Qt.FocusPolicy.NoFocus)
+
         # Set the default font
         font = QFont()
         font.setFamily('Consolas')
@@ -115,6 +118,12 @@ class Editor(QsciScintilla):
             b"False None True and as assert break class continue def del elif else except finally for from global if import in is lambda nonlocal not or pass raise return try while with yield",
         )
         self.SendScintilla(QsciScintilla.SCI_SETKEYWORDS, 1, b"self")
+
+    def keyPressEvent(self, e):
+        e.accept()
+
+    def keyReleaseEvent(self, e):
+        e.accept()
 
 
 class NoMouseListView(QListView):
