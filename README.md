@@ -5,7 +5,7 @@
 
 # DiffCast
 
-**Auto-generate coding demos & screencasts from Python files.**
+***Hands-free Programming Screencasts from Python source files.***
 
 Provided with a series of Python files, DiffCast automatically generates coding
 demos/screencasts using human-like edits. Designed for creating reproducible
@@ -14,7 +14,7 @@ tutoring examples, library demos or demonstrating code to a class.
 Avoid distracting typos, reduce video editing time, narrate code changes without "umms and aaahss",
 make screencast creation more accessible for people with disabilities. Regular editing speed makes demos easier to follow.
 
-<video src="https://user-images.githubusercontent.com/126239/151175395-b2afac8a-eeec-4667-87e8-9d7f911624e1.mp4"></video>
+<video src="https://user-images.githubusercontent.com/126239/151336683-4f0c423a-7bd5-4580-888b-4c08fdfdd4e9.mp4"></video>
 
 ## What?
 
